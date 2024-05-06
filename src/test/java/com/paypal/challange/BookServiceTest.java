@@ -66,4 +66,51 @@ public class BookServiceTest {
             Assertions.assertEquals(book.getAvailableCopies(), createdBook.getAvailableCopies());
             Assertions.assertEquals(book.getPublicationYear(), createdBook.getPublicationYear());
         }
+
+        @Test
+        void testBookUpdate_withAllValidParameters_shouldUpdate() {
+            // Arrange
+            Book book = new Book();
+            book.setId(1L);
+            book.setAuthor("Author");
+            book.setTitle("Title");
+            book.setAvailableCopies(10);
+            book.setPublicationYear(2021);
+            Mockito.when(bookRepository.findById(Mockito.eq(1L))).thenReturn(java.util.Optional.of(book));
+
+            Book updatedBook = new Book();
+            updatedBook.setAuthor("Author2");
+            updatedBook.setTitle("Title2");
+            updatedBook.setAvailableCopies(20);
+            updatedBook.setPublicationYear(2022);
+            Mockito.when(bookRepository.save(Mockito.any())).thenReturn(updatedBook);
+
+            // Act
+            Book updated = bookService.updateBook(updatedBook, 1L);
+
+            // Assert
+            Assertions.assertNotNull(updated);
+            Assertions.assertEquals(updatedBook.getAuthor(), updated.getAuthor());
+            Assertions.assertEquals(updatedBook.getTitle(), updated.getTitle());
+            Assertions.assertEquals(updatedBook.getAvailableCopies(), updated.getAvailableCopies());
+            Assertions.assertEquals(updatedBook.getPublicationYear(), updated.getPublicationYear());
+
+        }
+
+        @Test
+
+        void getBook_withExistingBook_shouldReturnBook() {
+            // Arrange
+            Book book = new Book();
+            book.setId(1L);
+            book.setAuthor("Author");
+            book.setTitle("Title");
+            book.setAvailableCopies(10);
+            book.setPublicationYear(2021);
+            Mockito.when(bookRepository.findById(Mockito.any())).thenReturn(java.util.Optional.of(book));
+            // Act
+            Book foundBook = this.bookService.getBook(1L);
+            // Assert
+            Assertions.assertNotNull(foundBook);
+        }
 }
